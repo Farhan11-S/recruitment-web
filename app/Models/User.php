@@ -47,8 +47,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function application()
+    public function candidateProfile()
     {
-        return $this->hasOne(Application::class);
+        return $this->hasOne(CandidateProfile::class);
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
     }
 }

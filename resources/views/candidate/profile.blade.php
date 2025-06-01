@@ -1,97 +1,132 @@
 @extends('layouts.app')
 
-@section('title', 'Profil Saya')
+@section('title', 'Profil Saya - ' . $user->name)
 
 @section('content')
 <div class="row">
-    {{-- KOLOM KIRI: PROFIL PENGGUNA --}}
-    <div class="col-md-4 mb-4">
+    {{-- KOLOM KIRI: INFORMASI PROFIL PENGGUNA --}}
+    <div class="col-lg-4 mb-4">
         <div class="card border-0 shadow-sm">
             <div class="card-body text-center">
                 <i class="bi bi-person-circle fs-1 text-primary"></i>
                 <h5 class="card-title mt-3">{{ $user->name }}</h5>
-                <p class="text-muted mb-0">{{ $user->email }}</p>
-                <hr>
-                <div class="text-start">
-                    <p class="mb-2">
-                        <i class="bi bi-telephone me-2"></i>
-                        {{ $user->application->phone_number ?? 'No. Telepon belum diisi' }}
-                    </p>
+                <p class="text-muted mb-2">{{ $user->email }}</p>
+
+                @if(session('status'))
+                <div class="alert alert-success mt-2">
+                    {{ session('status') }}
+                </div>
+                @endif
+            </div>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item">
+                    <small class="text-muted">Tempat, Tanggal Lahir</small>
                     <p class="mb-0">
-                        <i class="bi bi-geo-alt me-2"></i>
-                        {{ $user->application->address ?? 'Alamat belum diisi' }}
+                        {{ $user->candidateProfile?->place_of_birth ?? '-' }},
+                        {{ $user->candidateProfile?->date_of_birth ? \Carbon\Carbon::parse($user->candidateProfile->date_of_birth)->isoFormat('D MMMM YYYY') : '-' }}
                     </p>
                 </div>
-                <div class="d-grid mt-4">
-                    <a href="#" class="btn btn-outline-primary">Edit Profil & Data Diri</a>
+                <div class="list-group-item">
+                    <small class="text-muted">Jenis Kelamin</small>
+                    <p class="mb-0 text-capitalize">{{ $user->candidateProfile?->gender ?? '-' }}</p>
+                </div>
+                <div class="list-group-item">
+                    <small class="text-muted">No. Telepon</small>
+                    <p class="mb-0">{{ $user->candidateProfile?->phone_number ?? '-' }}</p>
+                </div>
+                <div class="list-group-item">
+                    <small class="text-muted">Alamat</small>
+                    <p class="mb-0" style="white-space: pre-wrap;">{{ $user->candidateProfile?->address ?? '-' }}</p>
+                </div>
+                <div class="list-group-item">
+                    <small class="text-muted">CV Utama</small>
+                    @if($user->candidateProfile?->resume_path)
+                    <p class="mb-0"><a href="{{ asset('storage/' . $user->candidateProfile->resume_path) }}"
+                            target="_blank">Lihat CV <i class="bi bi-box-arrow-up-right"></i></a></p>
+                    @else
+                    <p class="mb-0 text-danger">Belum diunggah</p>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- KOLOM KANAN: STATUS & DOKUMEN --}}
-    <div class="col-md-8">
-        {{-- KARTU STATUS LAMARAN --}}
+    {{-- KOLOM KANAN: KELENGKAPAN PROFIL & RIWAYAT LAMARAN --}}
+    <div class="col-lg-8">
+        {{-- KARTU KELENGKAPAN PROFIL & AKSI --}}
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-white border-0 pt-3">
-                <h5 class="mb-0">Status Lamaran Anda</h5>
+                <h5 class="mb-0">Status Profil & Tindakan</h5>
             </div>
             <div class="card-body">
-                @php
-                $status = $user->application->status;
-                $statusText = str_replace('_', ' ', $status);
-                $badgeColor = 'secondary';
-                if ($status === 'menunggu_seleksi') $badgeColor = 'primary';
-                if ($status === 'tes_psikotes') $badgeColor = 'info text-dark';
-                if ($status === 'diterima') $badgeColor = 'success';
-                if ($status === 'ditolak') $badgeColor = 'danger';
-                @endphp
-                <h4>
-                    <span class="badge bg-{{ $badgeColor }} text-capitalize">{{ $statusText }}</span>
-                </h4>
-                <p class="text-muted">Ini adalah status terbaru dari proses rekrutmen yang sedang Anda jalani.</p>
-
-                {{-- =============================================== --}}
-                {{-- LOGIKA KONDISIONAL UNTUK TOMBOL         --}}
-                {{-- =============================================== --}}
-
-                @if ($status === 'belum_lengkap')
+                @if (!$user->candidateProfile?->is_complete || !$user->candidateProfile?->resume_path)
                 <div class="alert alert-warning">
-                    Profil atau data diri Anda belum lengkap. Silakan lengkapi data diri dan unggah dokumen yang dibutuhkan.
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Profil Anda belum sepenuhnya lengkap atau CV utama belum diunggah. Silakan lengkapi untuk dapat
+                    melamar pekerjaan.
                 </div>
-                <a href="#" class="btn btn-primary"><i class="bi bi-upload me-2"></i> Upload Dokumen</a>
-
-                @elseif ($status === 'tes_psikotes')
-                <div class="alert alert-info">
-                    Selamat! Anda telah memasuki tahap Uji Psikotes. Silakan klik tombol di bawah untuk memulai tes.
+                @else
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    Profil Anda sudah lengkap dan CV utama telah terunggah! Anda siap melamar pekerjaan.
                 </div>
-                <a href="#" class="btn btn-success fw-bold"><i class="bi bi-pencil-square me-2"></i> Mulai Uji Psikotes</a>
-
                 @endif
 
+                <div class="d-flex flex-wrap gap-2">
+                    @if (!$user->candidateProfile?->is_complete)
+                    {{-- Ganti "#" dengan route ke halaman edit profil nantinya --}}
+                    <a href="{{ route('candidate.profile.edit') }}" class="btn btn-primary"><i
+                            class="bi bi-pencil-square me-1"></i> Lengkapi Data Diri</a>
+                    @endif
+
+                    @if (!$user->candidateProfile?->resume_path)
+                    {{-- Ganti "#" dengan route ke halaman upload CV utama nantinya --}}
+                    <a href="#" class="btn btn-info text-white"><i class="bi bi-file-earmark-arrow-up-fill me-1"></i>
+                        Upload CV Utama</a>
+                    @endif
+                </div>
             </div>
         </div>
 
-        {{-- KARTU DOKUMEN TERUNGGAH --}}
+        {{-- KARTU RIWAYAT LAMARAN --}}
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white border-0 pt-3">
-                <h5 class="mb-0">Dokumen Terunggah</h5>
+                <h5 class="mb-0">Riwayat Lamaran Saya</h5>
             </div>
             <div class="card-body">
-                @if ($user->application->documents->isNotEmpty())
-                <ul class="list-group list-group-flush">
-                    @foreach ($user->application->documents as $document)
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <i class="bi bi-file-earmark-text text-primary me-2"></i>
-                            {{ $document->document_name }}
+                @if ($user->applications->isNotEmpty())
+                <div class="list-group list-group-flush">
+                    @foreach ($user->applications as $application)
+                    <div class="list-group-item px-0">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ $application->jobVacancy?->title ?? 'Lowongan tidak ditemukan' }}</h6>
+                            <small class="text-muted">{{ $application->created_at->diffForHumans() }}</small>
                         </div>
-                        <small class="text-muted">Diunggah pada: {{ $document->created_at->format('d M Y') }}</small>
-                    </li>
+                        <p class="mb-1">
+                            @php
+                            $status = $application->status;
+                            $statusText = str_replace('_', ' ', $status);
+                            $badgeColor = 'secondary'; // default
+                            if (in_array($status, ['menunggu_seleksi', 'tes_psikotes'])) $badgeColor = 'primary';
+                            if (in_array($status, ['wawancara_pertama', 'wawancara_kedua'])) $badgeColor = 'info
+                            text-dark';
+                            if ($status === 'diterima') $badgeColor = 'success';
+                            if ($status === 'ditolak') $badgeColor = 'danger';
+                            if ($status === 'belum_lengkap') $badgeColor = 'warning text-dark';
+                            @endphp
+                            Status: <span class="badge bg-{{ $badgeColor }} text-capitalize">{{ $statusText }}</span>
+                        </p>
+                        {{-- Ganti "#" dengan route ke halaman detail lamaran spesifik nantinya --}}
+                        <a href="#" class="btn btn-sm btn-outline-primary mt-2">Lihat Detail Lamaran</a>
+                    </div>
                     @endforeach
-                </ul>
+                </div>
                 @else
-                <p class="text-muted text-center">Belum ada dokumen yang diunggah.</p>
+                <p class="text-muted text-center">Anda belum pernah melamar pekerjaan apapun.</p>
+                {{-- Ganti "#" dengan route ke halaman daftar lowongan nantinya --}}
+                <div class="text-center">
+                    <a href="#" class="btn btn-success">Lihat Lowongan Tersedia</a>
+                </div>
                 @endif
             </div>
         </div>

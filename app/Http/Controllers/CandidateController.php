@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class CandidateController extends Controller
 {
@@ -14,11 +15,17 @@ class CandidateController extends Controller
      */
     public function profile()
     {
-        // Ambil user yang sedang login, beserta relasi application dan documents
-        // Eager loading ini lebih efisien karena menghindari N+1 problem
-        $user = Auth::user()->load(['application', 'application.documents']);
+        $user = Auth::user();
 
-        // Kirim data user ke view
+        if (!$user->candidateProfile) {
+            $user->candidateProfile()->create(['is_complete' => false]);
+            $user->load('candidateProfile');
+        } else {
+            $user->load('candidateProfile');
+        }
+
+        $user->load('applications.jobVacancy');
+
         return view('candidate.profile', compact('user'));
     }
 }

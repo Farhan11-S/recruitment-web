@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Application;
+// HAPUS: use App\Models\Application; // Tidak lagi membuat aplikasi saat registrasi
+use App\Models\CandidateProfile; // BARU: Untuk membuat profil kandidat
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -48,15 +49,13 @@ class RegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'candidate', // Role ditetapkan secara otomatis
+            'role' => 'candidate',
         ]);
 
-        // 3. Buat data aplikasi yang terhubung dengan user baru
-        // Status awal adalah 'belum_lengkap'
+        // 3. Buat data CandidateProfile yang terhubung dengan user baru
         if ($user) {
-            Application::create([
-                'user_id' => $user->id,
-                'status' => 'belum_lengkap'
+            $user->candidateProfile()->create([
+                'is_complete' => false,
             ]);
         }
 
@@ -64,7 +63,6 @@ class RegisterController extends Controller
         Auth::login($user);
 
         // 5. Redirect ke halaman profil kandidat setelah berhasil
-        // Ganti 'candidate.profile' dengan nama route dashboard Anda
-        return redirect()->route('candidate.profile')->with('status', 'Pendaftaran berhasil! Selamat datang.');
+        return redirect()->route('candidate.profile')->with('status', 'Pendaftaran berhasil! Silakan lengkapi profil Anda.');
     }
 }

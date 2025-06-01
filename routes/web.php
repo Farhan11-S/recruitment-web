@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\CandidateProfileController;
+use App\Http\Controllers\DocumentController;
 
 // ... route lainnya
 
@@ -33,7 +35,10 @@ Route::middleware(['auth', 'role:hrd'])->group(function () {
 // Candidate Routes
 Route::middleware(['auth', 'role:candidate'])->group(function () {
     Route::get('/kandidat/profil', [CandidateController::class, 'profile'])->name('candidate.profile');
-});
 
-// Catatan: 'role:hrd' dan 'role:candidate' adalah contoh nama middleware
-// yang perlu Anda buat untuk proteksi route berdasarkan role.
+    Route::get('/kandidat/profil/edit', [CandidateProfileController::class, 'edit'])->name('candidate.profile.edit');
+    Route::put('/kandidat/profil', [CandidateProfileController::class, 'update'])->name('candidate.profile.update');
+
+    Route::get('/kandidat/dokumen/upload', [DocumentController::class, 'create'])->name('candidate.documents.create');
+    Route::post('/kandidat/dokumen/upload', [DocumentController::class, 'store'])->name('candidate.documents.store');
+});
