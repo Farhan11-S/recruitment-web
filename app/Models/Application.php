@@ -12,6 +12,7 @@ class Application extends Model
     protected $fillable = [
         'user_id',
         'status',
+        'job_vacancy_id',
     ];
 
     /**
@@ -25,5 +26,13 @@ class Application extends Model
     public function documents()
     {
         return $this->hasMany(Document::class);
+    }
+
+    /**
+     * Sebuah aplikasi terkait dengan satu lowongan pekerjaan.
+     */
+    public function jobVacancy()
+    {
+        return $this->belongsTo(JobVacancy::class);
     }
 }

@@ -13,8 +13,8 @@ return new class extends Migration
 
             // Relasi ke tabel users
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            // BARU: Relasi ke tabel jobs
-            $table->foreignId('job_id')->constrained('jobs')->onDelete('cascade');
+            // BARU: Relasi ke tabel job vacancies
+            $table->foreignId('job_vacancy_id')->constrained('job_vacancies')->onDelete('cascade');
             $table->enum('status', [
                 'belum_lengkap',
                 'menunggu_seleksi',

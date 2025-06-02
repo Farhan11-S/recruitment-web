@@ -39,13 +39,23 @@
                     <p class="mb-0" style="white-space: pre-wrap;">{{ $user->candidateProfile?->address ?? '-' }}</p>
                 </div>
                 <div class="list-group-item">
-                    <small class="text-muted">CV Utama</small>
-                    @if($user->candidateProfile?->resume_path)
-                    <p class="mb-0"><a href="{{ asset('storage/' . $user->candidateProfile->resume_path) }}"
-                            target="_blank">Lihat CV <i class="bi bi-box-arrow-up-right"></i></a></p>
-                    @else
-                    <p class="mb-0 text-danger">Belum diunggah</p>
-                    @endif
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted">CV Utama</small>
+                            @if($user->candidateProfile?->resume_path)
+                            <p class="mb-0"><a href="{{ asset('storage/' . $user->candidateProfile->resume_path) }}" target="_blank">Lihat CV Terunggah <i class="bi bi-box-arrow-up-right"></i></a></p>
+                            @else
+                            <p class="mb-0 text-danger">Belum diunggah</p>
+                            @endif
+                        </div>
+                        <div>
+                            {{-- Tombol ini mengarah ke halaman edit CV --}}
+                            <a href="{{ route('candidate.resume.edit') }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil-square"></i>
+                                {{ $user->candidateProfile?->resume_path ? 'Ubah' : 'Upload' }}
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,15 +84,12 @@
 
                 <div class="d-flex flex-wrap gap-2">
                     @if (!$user->candidateProfile?->is_complete)
-                    {{-- Ganti "#" dengan route ke halaman edit profil nantinya --}}
                     <a href="{{ route('candidate.profile.edit') }}" class="btn btn-primary"><i
                             class="bi bi-pencil-square me-1"></i> Lengkapi Data Diri</a>
                     @endif
 
                     @if (!$user->candidateProfile?->resume_path)
-                    {{-- Ganti "#" dengan route ke halaman upload CV utama nantinya --}}
-                    <a href="#" class="btn btn-info text-white"><i class="bi bi-file-earmark-arrow-up-fill me-1"></i>
-                        Upload CV Utama</a>
+                    <a href="{{ route('candidate.resume.edit') }}" class="btn btn-info text-white"><i class="bi bi-file-earmark-arrow-up-fill me-1"></i> Upload CV Utama</a>
                     @endif
                 </div>
             </div>
@@ -116,16 +123,14 @@
                             @endphp
                             Status: <span class="badge bg-{{ $badgeColor }} text-capitalize">{{ $statusText }}</span>
                         </p>
-                        {{-- Ganti "#" dengan route ke halaman detail lamaran spesifik nantinya --}}
-                        <a href="#" class="btn btn-sm btn-outline-primary mt-2">Lihat Detail Lamaran</a>
+                        <a href="{{ route('candidate.applications.show', $application) }}" class="btn btn-sm btn-outline-primary mt-2">Lihat Detail Lamaran</a>
                     </div>
                     @endforeach
                 </div>
                 @else
                 <p class="text-muted text-center">Anda belum pernah melamar pekerjaan apapun.</p>
-                {{-- Ganti "#" dengan route ke halaman daftar lowongan nantinya --}}
                 <div class="text-center">
-                    <a href="#" class="btn btn-success">Lihat Lowongan Tersedia</a>
+                    <a href="{{ route('job_vacancies.index') }}" class="btn btn-success">Lihat Lowongan Tersedia</a>
                 </div>
                 @endif
             </div>
