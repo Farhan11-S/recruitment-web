@@ -35,4 +35,12 @@ class Application extends Model
     {
         return $this->belongsTo(JobVacancy::class);
     }
+
+    /**
+     * Sebuah aplikasi memiliki satu hasil tes.
+     */
+    public function testResult()
+    {
+        return $this->hasOne(TestResult::class);
+    }
 }

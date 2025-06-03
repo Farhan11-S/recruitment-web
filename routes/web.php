@@ -7,8 +7,11 @@ use App\Http\Controllers\Candidate\ApplicationController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\CandidateProfileController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\HRD\ApplicationController as HRDApplicationController;
 use App\Http\Controllers\HRD\JobVacancyController as HrdJobVacancyController;
+use App\Http\Controllers\HRD\PsychotestQuestionController;
 use App\Http\Controllers\JobVacancyController;
+use App\Http\Controllers\PsychotestController;
 
 // ... route lainnya
 
@@ -30,11 +33,18 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // HRD Routes
 Route::middleware(['auth', 'role:hrd'])->prefix('hrd')->name('hrd.')->group(function () {
-    Route::get('/dashboard', function() {
+    Route::get('/dashboard', function () {
         return "Ini adalah halaman Dashboard HRD";
     })->name('dashboard');
 
     Route::resource('lowongan', HrdJobVacancyController::class)->names('job_vacancies');
+
+    // Pelamar
+    Route::get('/pelamar', [HRDApplicationController::class, 'index'])->name('applications.index');
+    Route::patch('/pelamar/{application}/update-status', [HRDApplicationController::class, 'updateStatus'])->name('applications.updateStatus');
+
+    // Soal Psikotes
+    Route::resource('soal-psikotes', PsychotestQuestionController::class)->names('psychotest_questions');
 });
 
 // Candidate Routes
@@ -59,4 +69,8 @@ Route::middleware(['auth', 'role:candidate'])->group(function () {
     // Lamaran
     Route::get('/kandidat/lamaran/{application}', [ApplicationController::class, 'show'])->name('candidate.applications.show');
     Route::post('/kandidat/lamaran/{application}/dokumen', [ApplicationController::class, 'storeDocument'])->name('candidate.applications.storeDocument');
+
+    // Psikotes
+    Route::get('/tes-psikotes/{application}', [PsychotestController::class, 'show'])->name('psychotest.show');
+    Route::post('/tes-psikotes/{application}', [PsychotestController::class, 'store'])->name('psychotest.store');
 });
