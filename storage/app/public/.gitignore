@@ -1,2 +1,4 @@
 *
 !.gitignore
+!psychotest/
+!psychotest/questions.json

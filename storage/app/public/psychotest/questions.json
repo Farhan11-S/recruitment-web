@@ -1,0 +1,112 @@
+[
+    {
+        "id": 1,
+        "question": "Angka selanjutnya dari deret berikut: 5, 10, 8, 13, 11, 16, 14, ... adalah?",
+        "options": {
+            "A": "12",
+            "B": "19",
+            "C": "17",
+            "D": "21"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "id": 2,
+        "question": "Jika mesin produksi mengalami macet ringan, hal pertama yang seharusnya Anda lakukan adalah...",
+        "options": {
+            "A": "Memukul mesin agar berfungsi kembali.",
+            "B": "Mematikan mesin sesuai prosedur dan melaporkannya ke atasan/supervisor.",
+            "C": "Mencoba memperbaikinya sendiri walau tidak tahu caranya.",
+            "D": "Meninggalkan mesin dan melanjutkan pekerjaan lain."
+        },
+        "correct_answer": "B"
+    },
+    {
+        "id": 3,
+        "question": "(15 x 3) + (40 / 8) - 10 = ?",
+        "options": {
+            "A": "35",
+            "B": "40",
+            "C": "45",
+            "D": "50"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "id": 4,
+        "question": "Anda melihat rekan kerja tidak menggunakan sarung tangan di area yang mewajibkannya. Apa tindakan Anda?",
+        "options": {
+            "A": "Membiarkannya karena itu bukan urusan saya.",
+            "B": "Melaporkannya langsung ke manajer.",
+            "C": "Mengingatkannya dengan sopan untuk memakai sarung tangan demi keselamatan.",
+            "D": "Menertawakannya karena ceroboh."
+        },
+        "correct_answer": "C"
+    },
+    {
+        "id": 5,
+        "question": "Kata 'KERJA' berhubungan dengan 'GAJI', sebagaimana kata 'BELAJAR' berhubungan dengan ...",
+        "options": {
+            "A": "NILAI",
+            "B": "UANG",
+            "C": "BODOH",
+            "D": "MAKAN"
+        },
+        "correct_answer": "A"
+    },
+    {
+        "id": 6,
+        "question": "Sebuah kotak berisi 100 buah sekrup. Jika satu produk membutuhkan 6 sekrup, berapa sisa sekrup setelah Anda menyelesaikan 15 produk?",
+        "options": {
+            "A": "5",
+            "B": "10",
+            "C": "15",
+            "D": "20"
+        },
+        "correct_answer": "B"
+    },
+    {
+        "id": 7,
+        "question": "Target produksi tim Anda sudah tercapai, tetapi jam kerja belum selesai dan rekan Anda masih mengerjakan tugasnya. Apa yang Anda lakukan?",
+        "options": {
+            "A": "Langsung bersantai karena tugas saya sudah selesai.",
+            "B": "Menawarkan bantuan kepada rekan kerja saya.",
+            "C": "Pulang lebih awal tanpa memberitahu siapa pun.",
+            "D": "Mengobrol dengan rekan lain yang juga sudah selesai."
+        },
+        "correct_answer": "B"
+    },
+    {
+        "id": 8,
+        "question": "Semua karyawan pabrik harus disiplin. Budi adalah seorang karyawan pabrik. Maka...",
+        "options": {
+            "A": "Budi mungkin tidak disiplin.",
+            "B": "Budi harus disiplin.",
+            "C": "Beberapa karyawan pabrik tidak disiplin.",
+            "D": "Disiplin tidak penting."
+        },
+        "correct_answer": "B"
+    },
+    {
+        "id": 9,
+        "question": "Jika Anda menemukan produk yang cacat ringan, apa tindakan Anda?",
+        "options": {
+            "A": "Membiarkannya agar tidak memperlambat pekerjaan.",
+            "B": "Memisahkannya dan melaporkannya sesuai prosedur quality control.",
+            "C": "Membuangnya diam-diam.",
+            "D": "Menyalahkan rekan kerja."
+        },
+        "correct_answer": "B"
+    },
+    {
+        "id": 10,
+        "question": "Pilih gambar selanjutnya dari pola berikut: [Lingkaran], [Persegi], [Segitiga], [Lingkaran], [Persegi], ...",
+        "options": {
+            "A": "Lingkaran",
+            "B": "Persegi",
+            "C": "Segitiga",
+            "D": "Elips"
+        },
+        "correct_answer": "C"
+    }
+]
