@@ -8,6 +8,7 @@ use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\CandidateProfileController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\HRD\ApplicationController as HRDApplicationController;
+use App\Http\Controllers\HRD\DashboardController;
 use App\Http\Controllers\HRD\JobVacancyController as HrdJobVacancyController;
 use App\Http\Controllers\HRD\PsychotestQuestionController;
 use App\Http\Controllers\JobVacancyController;
@@ -33,9 +34,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // HRD Routes
 Route::middleware(['auth', 'role:hrd'])->prefix('hrd')->name('hrd.')->group(function () {
-    Route::get('/dashboard', function () {
-        return "Ini adalah halaman Dashboard HRD";
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
 
     Route::resource('lowongan', HrdJobVacancyController::class)->names('job_vacancies');
 

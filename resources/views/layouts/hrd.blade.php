@@ -86,16 +86,14 @@
       </div>
       <ul class="nav flex-column flex-grow-1">
         <li class="nav-item">
-          {{-- Cek apakah route saat ini adalah 'hrd.dashboard' --}}
           <a
             class="nav-link {{ request()->routeIs('hrd.dashboard') ? 'active' : '' }}"
-            href="#"
+            href="{{ route('hrd.dashboard') }}"
           >
             <i class="bi bi-grid-1x2-fill"></i> Dashboard
           </a>
         </li>
         <li class="nav-item">
-          {{-- Cek apakah nama route saat ini dimulai dengan 'hrd.job_vacancies' --}}
           <a
             class="nav-link {{ request()->routeIs('hrd.job_vacancies.*') ? 'active' : '' }}"
             href="{{ route('hrd.job_vacancies.index') }}"
