@@ -27,6 +27,7 @@ class PsychotestController extends Controller
             return redirect()->route('candidate.profile')->with('error', 'Anda tidak dapat mengakses halaman ini.');
         }
 
+        // Ambil 10 soal secara acak sebagai contoh
         $questions = PsychotestQuestion::with('options')->inRandomOrder()->take(10)->get();
 
         return view('psychotest.show', compact('questions', 'application'));
@@ -37,39 +38,50 @@ class PsychotestController extends Controller
      */
     public function store(Request $request, Application $application)
     {
-        // Otorisasi & Validasi (sama seperti di method show)
+        // 1. Otorisasi & Validasi Keamanan
         if (Auth::id() !== $application->user_id || $application->status !== 'tes_psikotes' || $application->testResult) {
-            abort(403);
+            abort(403, 'Aksi tidak diizinkan.');
         }
 
         $userAnswers = $request->input('answers', []);
+
+        if (empty($userAnswers)) {
+            return back()->with('error', 'Anda harus menjawab setidaknya satu pertanyaan.');
+        }
+
+        // 2. Ambil Kunci Jawaban dari Database
+        // Dapatkan ID dari semua pertanyaan yang dijawab oleh user
         $questionIds = array_keys($userAnswers);
 
-        $correctOptions = PsychotestOption::whereIn('psychotest_question_id', $questionIds)
+        // Buat "peta" kunci jawaban: [question_id => correct_option_id]
+        $correctOptions = \App\Models\PsychotestOption::whereIn('psychotest_question_id', $questionIds)
             ->where('is_correct', true)
             ->pluck('id', 'psychotest_question_id');
 
-        $score = 0;
+        // 3. Hitung Skor
+        $correctCount = 0;
         foreach ($userAnswers as $questionId => $chosenOptionId) {
+            // Cek apakah jawaban user cocok dengan kunci jawaban
             if (isset($correctOptions[$questionId]) && $correctOptions[$questionId] == $chosenOptionId) {
-                $score += 10;
+                $correctCount++;
             }
         }
 
-        // Simpan hasil tes
+        // 4. Konversi Skor ke Skala 0-100 (agar mudah dibaca HRD)
+        $totalQuestions = count($questionIds);
+        $finalScore = ($totalQuestions > 0) ? round(($correctCount / $totalQuestions) * 100) : 0;
+
+        // 5. Simpan Hasil Tes
         TestResult::create([
             'application_id' => $application->id,
-            'score' => $score,
-            'token' => bin2hex(random_bytes(16)),
-            'answers' => json_encode($userAnswers), // Simpan jawaban user
+            'score' => $finalScore,
+            'answers' => json_encode($userAnswers), // Simpan jawaban user (opsional tapi bagus untuk audit)
             'completed_at' => now(),
-            // 'token' bisa di-generate jika diperlukan
+            'token' => \Str::random(32), // Generate token unik untuk hasil tes
         ]);
 
-        // uncomment jika ingin mengupdate status lamaran berdasarkan skor
-        // $nextStatus = ($score >= 70) ? 'wawancara_pertama' : 'ditolak'; // Contoh passing grade 70
-        // $application->update(['status' => $nextStatus]);
-
-        return redirect()->route('candidate.applications.show', $application)->with('status', 'Tes psikotes telah selesai. Terima kasih!');
+        // 6. Redirect (Status TIDAK diubah)
+        return redirect()->route('candidate.applications.show', $application)
+            ->with('status', 'Tes psikotes telah selesai. Hasil Anda telah kami rekam. Harap tunggu informasi selanjutnya dari tim HRD.');
     }
 }
