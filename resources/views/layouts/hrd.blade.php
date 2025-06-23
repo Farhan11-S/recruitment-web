@@ -17,60 +17,146 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     >
     <style>
+      /* === PERUBAHAN GAYA VISUAL (TEMA HIJAU) === */
+      :root {
+        /* [UBAH] Warna utama diubah menjadi hijau */
+        --primary-green: #006400;
+        --secondary-text: #6c757d;
+        --body-bg: #f8f9fa;
+        /* [UBAH] Override warna primer Bootstrap agar konsisten di semua komponen */
+        --bs-primary: var(--primary-green);
+        --bs-primary-rgb: 0, 100, 0;
+      }
+
       body {
         display: flex;
         min-height: 100vh;
-        background-color: #f4f7f9;
+        background-color: var(--body-bg);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
       }
 
       #sidebar {
         width: 250px;
         min-height: 100vh;
-        background-color: #343a40;
-        color: #fff;
+        background-color: #ffffff;
+        color: #333;
         position: fixed;
         left: 0;
         top: 0;
         bottom: 0;
         z-index: 100;
+        border-right: 1px solid #e9ecef;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
       }
 
       #sidebar .nav-link {
-        color: #adb5bd;
-        padding: 0.75rem 1.5rem;
+        color: var(--secondary-text);
+        padding: 0.85rem 1.5rem;
         display: flex;
         align-items: center;
+        font-weight: 500;
+        transition: all 0.2s ease-in-out;
       }
 
+      .btn-primary {
+        background-color: var(--primary-green);
+        border-color: var(--primary-green);
+      }
+
+      .btn-primary:hover {
+        background-color: #004d00;
+        /* Warna hijau sedikit lebih gelap untuk hover */
+        border-color: #004500;
+      }
+
+      .btn-primary:active,
+      .btn-primary:focus,
+      .btn-primary.active {
+        background-color: #004d00 !important;
+        border-color: #004500 !important;
+        box-shadow: 0 0 0 0.25rem rgba(0, 100, 0, 0.5) !important;
+        /* Glow hijau saat aktif/fokus */
+      }
+
+      /* [UBAH] Warna hover disesuaikan dengan warna utama baru */
       #sidebar .nav-link:hover {
-        background-color: #495057;
-        color: #fff;
+        background-color: rgba(0, 100, 0, 0.08);
+        /* Hijau dengan opacity rendah */
+        color: var(--primary-green);
       }
 
       #sidebar .nav-link.active {
-        background-color: #0d6efd;
+        background-color: var(--primary-green);
         color: #fff;
+        border-radius: 8px;
+        margin: 0.25rem 1rem;
+        padding: 0.85rem 1rem;
       }
 
       #sidebar .nav-link .bi {
-        margin-right: 0.75rem;
+        margin-right: 0.85rem;
+        font-size: 1.1rem;
+      }
+
+      #sidebar .sidebar-header {
+        padding: 1.5rem;
+      }
+
+      /* [UBAH] Warna teks di header disesuaikan */
+      #sidebar .sidebar-header h4 {
+        color: var(--primary-green);
+      }
+
+      #sidebar .sidebar-footer {
+        padding: 1.5rem;
+        border-top: 1px solid #e9ecef;
+      }
+
+      #sidebar .sidebar-footer a {
+        color: var(--secondary-text);
+        text-decoration: none;
+      }
+
+      #sidebar .sidebar-footer a:hover {
+        color: var(--primary-green);
       }
 
       .main-content {
         margin-left: 250px;
         width: calc(100% - 250px);
-        padding: 2rem;
-      }
-
-      .navbar-logout {
-        width: calc(100% - 250px);
-        left: 250px;
-        z-index: 99;
+        padding: 2.5rem;
       }
 
       .card {
-        border: none;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e9ecef;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-radius: 0.75rem;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: #008000;
+        /* Sedikit lebih terang dari warna utama */
+        box-shadow: 0 0 0 0.25rem rgba(0, 100, 0, 0.25);
+        /* Glow berwarna hijau */
+      }
+
+      .form-check-input:checked {
+        background-color: var(--primary-green);
+        border-color: var(--primary-green);
+      }
+
+      .table-green thead {
+        background-color: var(--primary-green);
+        color: #ffffff;
+      }
+
+      .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      .align-middle {
+        vertical-align: middle;
       }
     </style>
   </head>
@@ -81,8 +167,8 @@
       id="sidebar"
       class="d-flex flex-column p-0"
     >
-      <div class="p-4">
-        <h4 class="fw-bold">HRD Dashboard</h4>
+      <div class="sidebar-header">
+        <h4 class="fw-bold"><i class="bi bi-person-workspace"></i> HRD Portal</h4>
       </div>
       <ul class="nav flex-column flex-grow-1">
         <li class="nav-item">
@@ -90,7 +176,7 @@
             class="nav-link {{ request()->routeIs('hrd.dashboard') ? 'active' : '' }}"
             href="{{ route('hrd.dashboard') }}"
           >
-            <i class="bi bi-grid-1x2-fill"></i> Dashboard
+            <i class="bi bi-grid-fill"></i> Dashboard
           </a>
         </li>
         <li class="nav-item">
@@ -98,7 +184,7 @@
             class="nav-link {{ request()->routeIs('hrd.job_vacancies.*') ? 'active' : '' }}"
             href="{{ route('hrd.job_vacancies.index') }}"
           >
-            <i class="bi bi-briefcase-fill"></i> Manajemen Lowongan
+            <i class="bi bi-briefcase-fill"></i> Lowongan
           </a>
         </li>
         <li class="nav-item">
@@ -106,7 +192,7 @@
             class="nav-link {{ request()->routeIs('hrd.applications.*') ? 'active' : '' }}"
             href="{{ route('hrd.applications.index') }}"
           >
-            <i class="bi bi-people-fill"></i> Daftar Pelamar
+            <i class="bi bi-people-fill"></i> Pelamar
           </a>
         </li>
         <li class="nav-item">
@@ -114,14 +200,15 @@
             class="nav-link {{ request()->routeIs('hrd.psychotest_questions.*') ? 'active' : '' }}"
             href="{{ route('hrd.psychotest_questions.index') }}"
           >
-            <i class="bi bi-patch-question-fill"></i> Manajemen Soal Tes
+            <i class="bi bi-patch-question-fill"></i> Soal Psikotes
           </a>
         </li>
       </ul>
-      <div class="mt-auto p-4">
-        <small>{{ Auth::user()->name }}</small><br>
+      <div class="sidebar-footer">
+        <div class="fw-bold">{{ Auth::user()->name }}</div>
+        <small class="text-muted">{{ Auth::user()->role }}</small>
+        <hr>
         <a
-          class="text-white-50"
           href="#"
           onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
         >

@@ -9,7 +9,8 @@
     </div>
 
     <div class="row">
-      <div class="col-xl-3 col-md-6 mb-4">
+      <div class="col-xl-4 col-md-6 mb-4">
+        {{-- Kartu ini sekarang otomatis berborder hijau karena class 'border-left-primary' --}}
         <div class="card border-left-primary h-100 py-2 shadow">
           <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -24,7 +25,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xl-3 col-md-6 mb-4">
+      <div class="col-xl-4 col-md-6 mb-4">
         <div class="card border-left-success h-100 py-2 shadow">
           <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -39,7 +40,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xl-3 col-md-6 mb-4">
+      <div class="col-xl-4 col-md-6 mb-4">
         <div class="card border-left-info h-100 py-2 shadow">
           <div class="card-body">
             <div class="row no-gutters align-items-center">
@@ -77,8 +78,11 @@
           </div>
           <div class="card-body">
             @forelse($topVacancies as $vacancy)
-              <div class="d-flex justify-content-between align-items-center border-bottom mb-2 pb-2">
+              <div
+                class="d-flex justify-content-between align-items-center @if (!$loop->last) border-bottom @endif mb-2 pb-2"
+              >
                 <span>{{ $vacancy->title }}</span>
+                {{-- Badge ini sekarang otomatis berwarna hijau karena class 'bg-primary' --}}
                 <span class="badge bg-primary rounded-pill">{{ $vacancy->applications_count }} Pelamar</span>
               </div>
             @empty
@@ -108,10 +112,12 @@
           labels: labels,
           datasets: [{
             label: "Jumlah Pelamar",
-            backgroundColor: "#4e73df",
-            hoverBackgroundColor: "#2e59d9",
-            borderColor: "#4e73df",
+            /* [UBAH] Ganti warna bar chart menjadi hijau, sesuaikan juga warna hover */
+            backgroundColor: "#006400",
+            hoverBackgroundColor: "#004d00", // Warna hijau lebih gelap untuk hover
+            borderColor: "#006400",
             data: data,
+            borderRadius: 4,
           }],
         },
         options: {
@@ -127,6 +133,13 @@
           plugins: {
             legend: {
               display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return context.dataset.label + ': ' + context.raw + ' orang';
+                }
+              }
             }
           }
         }
@@ -134,18 +147,18 @@
     });
   </script>
 
-  {{-- Tambahkan CSS untuk kartu ringkasan --}}
+  {{-- Tambahan CSS untuk border card (tidak berubah, tapi dipertahankan) --}}
   <style>
     .card .border-left-primary {
-      border-left: 0.25rem solid #4e73df !important;
+      border-left: 0.25rem solid var(--bs-primary) !important;
     }
 
     .card .border-left-success {
-      border-left: 0.25rem solid #1cc88a !important;
+      border-left: 0.25rem solid var(--bs-success) !important;
     }
 
     .card .border-left-info {
-      border-left: 0.25rem solid #36b9cc !important;
+      border-left: 0.25rem solid var(--bs-info) !important;
     }
 
     .chart-area {
