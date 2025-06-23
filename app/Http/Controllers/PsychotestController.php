@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Application;
+use App\Models\PsychotestOption;
+use App\Models\PsychotestQuestion;
 use App\Models\TestResult;
 
 class PsychotestController extends Controller
